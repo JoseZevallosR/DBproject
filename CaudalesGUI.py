@@ -124,7 +124,10 @@ class Ui_MainWindow(object):
 
         self.exportcsvM = QtGui.QPushButton(self.frame_5)
         self.exportcsvM.setObjectName(_fromUtf8("exportcsvM"))
+        self.exportcsvM.clicked.connect(self.exportCSV1)
+        #self.exportcsvM.clicked.connect(self.Actualizarcelda1)
         self.gridLayout_9.addWidget(self.exportcsvM, 1, 5, 1, 1)
+
         self.gridLayout_16.addWidget(self.frame_5, 0, 0, 1, 1)
         self.line = QtGui.QFrame(self.tab)
         self.line.setFrameShape(QtGui.QFrame.VLine)
@@ -254,6 +257,8 @@ class Ui_MainWindow(object):
         self.tabla1.setObjectName(_fromUtf8("tabla1"))
         self.tabla1.setColumnCount(0)
         self.tabla1.setRowCount(0)
+        #tener en cuenta
+        #self.tabla1.itemChanged.connect(self.Actualizarcelda1)
 
         self.gridLayout_16.addWidget(self.tabla1, 2, 0, 1, 3)
 
@@ -368,6 +373,7 @@ class Ui_MainWindow(object):
         self.fecha2 = QtGui.QLineEdit(self.frame_3)
         self.fecha2.setObjectName(_fromUtf8("fecha2"))
         self.gridLayout_12.addWidget(self.fecha2, 0, 3, 2, 2)
+
         self.borrar2 = QtGui.QPushButton(self.frame_3)
         self.borrar2.setObjectName(_fromUtf8("borrar2"))
         self.gridLayout_12.addWidget(self.borrar2, 2, 2, 1, 1)
@@ -743,7 +749,7 @@ class Ui_MainWindow(object):
         self.fecha3.setText(time.strftime("%Y-%m-%d"))
         self.fecha4.setText(time.strftime("%Y-%m-%d"))
 
-        #self.tabla1.itemChanged.connect(self.Actualizarcelda1)
+        self.tabla1.itemChanged.connect(self.Actualizarcelda1)
 ##################33
     def Actualizar_Manual(self):
         conn = sqlite3.connect("caudales.bd")
@@ -1026,7 +1032,7 @@ class Ui_MainWindow(object):
         print "La locacion de su archivo es : "+ self.archivolocacion
         conn=sqlite3.connect('caudales.bd')
         df = pd.read_csv(str(self.archivolocacion))
-        df.to_sql(str(self.comboBox.currentText()), conn, if_exists='replace', index=False)
+        df.to_sql(str(self.comboBox.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Auto()
 
     def csvFileConvencional(self):
@@ -1035,7 +1041,7 @@ class Ui_MainWindow(object):
         print "La locacion de su archivo es : "+ self.archivolocacion
         conn=sqlite3.connect('caudales.bd')
         df = pd.read_csv(str(self.archivolocacion))
-        df.to_sql(str(self.menuEstaciones.currentText()), conn, if_exists='replace', index=False)
+        df.to_sql(str(self.menuEstaciones.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Manual()
 
     def csvFileAforo(self):
@@ -1044,7 +1050,7 @@ class Ui_MainWindow(object):
         print "La locacion de su archivo es : "+ self.archivolocacion
         conn=sqlite3.connect('caudales.bd')
         df = pd.read_csv(str(self.archivolocacion))
-        df.to_sql(str(self.comboBox_2.currentText()), conn, if_exists='replace', index=False)
+        df.to_sql(str(self.comboBox_2.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Aforo()
 
     def csvFileAlertas(self):
@@ -1053,7 +1059,7 @@ class Ui_MainWindow(object):
         print "La locacion de su archivo es : "+ self.archivolocacion
         conn=sqlite3.connect('caudales.bd')
         df = pd.read_csv(str(self.archivolocacion))
-        df.to_sql(str(self.comboBox_3.currentText()), conn, if_exists='replace', index=False)
+        df.to_sql(str(self.comboBox_3.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Alerta()
 
     def borrarL(self):
@@ -1071,15 +1077,81 @@ class Ui_MainWindow(object):
 
     def Actualizarcelda1(self):
         "modificar las celdas de la estaciones Convencionales"
+        conn=sqlite3.connect('caudales.bd')
+        cursor = conn.cursor()
         column=self.tabla1.currentColumn()
         row=self.tabla1.currentRow()
-        ids=self.tabla1.item(row,0).text()
-        columns=['fecha']+['n'+str(x) for x in range(1,25)]
-        value=self.tabla1.currentItem().text()
-        #cursor.execute("UPDATE "+str(self.menuEstaciones.currentText()) +" SET "+columns[column]+'='+':value WHERE fecha=:id',ids)
+        try:
+            ids=str(self.tabla1.item(row,0).text())
+            columns=['fecha']+['n'+str(x) for x in range(1,25)]
+            value=str(self.tabla1.currentItem().text())
+            cursor.execute("UPDATE "+str(self.menuEstaciones.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
+            conn.commit()
+            cursor.close()
+            self.Actualizar_Manual()
+        except:
+            print("")
+
+    def Actualizarcelda2(self):
+        "modificar las celdas de la estaciones Convencionales"
+        conn=sqlite3.connect('caudales.bd')
+        cursor = conn.cursor()
+        column=self.tabla1.currentColumn()
+        row=self.tabla1.currentRow()
+        try:
+            ids=str(self.tabla1.item(row,0).text())
+            columns=['fecha']+['n'+str(x) for x in range(1,25)]
+            value=str(self.tabla1.currentItem().text())
+            cursor.execute("UPDATE "+str(self.comboBox.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
+            conn.commit()
+            cursor.close()
+            self.Actualizar_Manual()
+        except:
+            print("")
+
+    def Actualizarcelda3(self):
+        "modificar las celdas de la estaciones Convencionales"
+        conn=sqlite3.connect('caudales.bd')
+        cursor = conn.cursor()
+        column=self.tabla1.currentColumn()
+        row=self.tabla1.currentRow()
+        try:
+            ids=str(self.tabla1.item(row,0).text())
+            columns=['fecha']+['n'+str(x) for x in range(1,25)]
+            value=str(self.tabla1.currentItem().text())
+            cursor.execute("UPDATE "+str(self.comboBox_2.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
+            conn.commit()
+            cursor.close()
+            self.Actualizar_Manual()
+        except:
+            print("")
+
+    def Actualizarcelda4(self):
+        "modificar las celdas de la estaciones Convencionales"
+        conn=sqlite3.connect('caudales.bd')
+        cursor = conn.cursor()
+        column=self.tabla1.currentColumn()
+        row=self.tabla1.currentRow()
+        try:
+            ids=str(self.tabla1.item(row,0).text())
+            columns=['fecha']+['n'+str(x) for x in range(1,25)]
+            value=str(self.tabla1.currentItem().text())
+            cursor.execute("UPDATE "+str(self.comboBox_3.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
+            conn.commit()
+            cursor.close()
+            self.Actualizar_Manual()
+        except:
+            print("")
 
 
-
+    def exportCSV1(self):
+        with open("datos.csv", "wb") as write_file:
+            conn=sqlite3.connect('caudales.bd')
+            cursor = conn.cursor()
+            for row in cursor.execute("SELECT * FROM "+ str(self.menuEstaciones.currentText())):
+                write_file.write(str(row))
+            
+            cursor.close()
     def ayuda(self):
         msgBox = QtGui.QMessageBox()
         msgBox.setText("""
