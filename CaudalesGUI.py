@@ -108,6 +108,7 @@ class Ui_MainWindow(object):
         self.menuEstaciones = QtGui.QComboBox(self.frame_5)
         self.menuEstaciones.setObjectName(_fromUtf8("menuEstaciones"))
         self.menuEstaciones.addItems(filter(lambda k: '_Niveles_Convencionales' in k, self.lista()))  
+        self.menuEstaciones.activated.connect(self.Actualizar_Manual)#actualiza ni bien uno escoje el combo
         self.gridLayout_9.addWidget(self.menuEstaciones, 1, 1, 1, 1)
 
         self.label_25 = QtGui.QLabel(self.frame_5)
@@ -146,7 +147,7 @@ class Ui_MainWindow(object):
 
         self.actualizar1 = QtGui.QPushButton(self.frame_6)
         self.actualizar1.setObjectName(_fromUtf8("actualizar1"))
-        self.actualizar1.clicked.connect(self.Actualizar_Manual)
+        self.actualizar1.clicked.connect(self.filtrarConvencionales)
         self.gridLayout_10.addWidget(self.actualizar1, 1, 0, 1, 1)
 
         self.guardar1 = QtGui.QPushButton(self.frame_6)
@@ -692,7 +693,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuEquipo.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.ventana.setCurrentIndex(4)
+        self.ventana.setCurrentIndex(1) #ventana por defecto al iniciar la aplicacion
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
 
@@ -1193,11 +1194,11 @@ class Ui_MainWindow(object):
     def filtrarConvencionales(self):
         conn = sqlite3.connect("caudales.bd")
         cursor = conn.cursor()
-
-        date1=str(self.busqueda1.text())
-        result = tuple(date1.split('/'))
-        date = dt.date(year=result[0], month=result[1], day=int(result[2])+10)
-        date2 = date.strftime("%Y/%m/%d")
+        date1=str(self.busqueda11.text())
+        date2=str(self.busqueda1.text())
+        #result = tuple(date1.split('/'))
+        #date = dt.date(year=result[0], month=result[1], day=int(result[2])+10)
+        #date2 = date.strftime("%Y/%m/%d")
 
         cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha BETWEEN '+date1+" AND "+date2)  
 
