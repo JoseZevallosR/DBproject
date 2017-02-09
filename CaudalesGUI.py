@@ -35,7 +35,7 @@ except AttributeError:
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
-        MainWindow.resize(1798, 817)
+        MainWindow.resize(1750, 950)
 
         self.archivolocacion=""
 
@@ -253,6 +253,10 @@ class Ui_MainWindow(object):
         self.gridLayout_11.addWidget(self.busqueda1, 0, 1, 1, 1)
         self.gridLayout_16.addWidget(self.frame_11, 3, 0, 1, 1)
 
+        self.busqueda11 = QtGui.QLineEdit(self.frame_11)
+        self.busqueda11.setObjectName(_fromUtf8("busqueda11"))
+        self.gridLayout_11.addWidget(self.busqueda11, 1, 1, 1, 1)
+
         self.tabla1 = QtGui.QTableWidget(self.tab)
         self.tabla1.setObjectName(_fromUtf8("tabla1"))
         self.tabla1.setColumnCount(0)
@@ -281,9 +285,15 @@ class Ui_MainWindow(object):
         self.label_2 = QtGui.QLabel(self.frame_12)
         self.label_2.setObjectName(_fromUtf8("label_2"))
         self.gridLayout_13.addWidget(self.label_2, 0, 0, 1, 1)
+
         self.busqueda2 = QtGui.QLineEdit(self.frame_12)
         self.busqueda2.setObjectName(_fromUtf8("busqueda2"))
         self.gridLayout_13.addWidget(self.busqueda2, 0, 1, 1, 1)
+
+        self.busqueda22 = QtGui.QLineEdit(self.frame_12)
+        self.busqueda22.setObjectName(_fromUtf8("busqueda22"))
+        self.gridLayout_13.addWidget(self.busqueda22, 1, 1, 1, 1)
+
         self.gridLayout_17.addWidget(self.frame_12, 3, 0, 1, 1)
         self.frame_2 = QtGui.QFrame(self.tab_2)
         self.frame_2.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -549,9 +559,15 @@ class Ui_MainWindow(object):
         self.label_3 = QtGui.QLabel(self.tab_3)
         self.label_3.setObjectName(_fromUtf8("label_3"))
         self.gridLayout_8.addWidget(self.label_3, 3, 0, 1, 1)
+
         self.busqueda3 = QtGui.QLineEdit(self.tab_3)
         self.busqueda3.setObjectName(_fromUtf8("busqueda3"))
         self.gridLayout_8.addWidget(self.busqueda3, 3, 1, 1, 1)
+
+        self.busqueda33 = QtGui.QLineEdit(self.tab_3)
+        self.busqueda33.setObjectName(_fromUtf8("busqueda33"))
+        self.gridLayout_8.addWidget(self.busqueda33, 4, 1, 1, 1)
+
         self.tabla3 = QtGui.QTableWidget(self.tab_3)
         self.tabla3.setObjectName(_fromUtf8("tabla3"))
         self.tabla3.setColumnCount(0)
@@ -595,9 +611,15 @@ class Ui_MainWindow(object):
         self.label_4 = QtGui.QLabel(self.tab_4)
         self.label_4.setObjectName(_fromUtf8("label_4"))
         self.gridLayout_15.addWidget(self.label_4, 3, 0, 1, 1)
+
         self.busqueda4 = QtGui.QLineEdit(self.tab_4)
         self.busqueda4.setObjectName(_fromUtf8("busqueda4"))
         self.gridLayout_15.addWidget(self.busqueda4, 3, 1, 1, 1)
+
+        self.busqueda44 = QtGui.QLineEdit(self.tab_4)
+        self.busqueda44.setObjectName(_fromUtf8("busqueda44"))
+        self.gridLayout_15.addWidget(self.busqueda44, 5, 1, 1, 1)
+
         self.frame_10 = QtGui.QFrame(self.tab_4)
         self.frame_10.setFrameShape(QtGui.QFrame.StyledPanel)
         self.frame_10.setFrameShadow(QtGui.QFrame.Raised)
@@ -1188,6 +1210,14 @@ class Ui_MainWindow(object):
             for column,item in enumerate(form):
                 self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))        
 
+    def tablaMaestro():
+        conn=sqlite3.connect("caudales.bd")
+        cursor = conn.cursor()
+        cursor.execute ("""CREATE TABLE IF NOT EXISTS Maestro (Codigo string,
+        Nombre string,DRE string,SisHidro string,
+                 Cuenca string,rio string,DPTO string,PROV string,
+                 DISTRITO string,LONG string,
+                 LAT string,ALT string, Inicio string,ENT string,Q string)""")
 
     def ayuda(self):
         msgBox = QtGui.QMessageBox()
