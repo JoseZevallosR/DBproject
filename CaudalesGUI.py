@@ -107,7 +107,7 @@ class Ui_MainWindow(object):
 
         self.menuEstaciones = QtGui.QComboBox(self.frame_5)
         self.menuEstaciones.setObjectName(_fromUtf8("menuEstaciones"))
-        self.menuEstaciones.addItems(filter(lambda k: 'Niveles_Convencionales_' in k, self.lista()))  
+        self.menuEstaciones.addItems(filter(lambda k: '_Niveles_Convencionales' in k, self.lista()))  
         self.gridLayout_9.addWidget(self.menuEstaciones, 1, 1, 1, 1)
 
         self.label_25 = QtGui.QLabel(self.frame_5)
@@ -390,7 +390,7 @@ class Ui_MainWindow(object):
 
         self.comboBox = QtGui.QComboBox(self.frame_3)
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
-        self.comboBox.addItems(filter(lambda k: 'Niveles_Automaticos_' in k, self.lista()))  
+        self.comboBox.addItems(filter(lambda k: '_Niveles_Automaticos' in k, self.lista()))  
         self.gridLayout_12.addWidget(self.comboBox, 1, 0, 1, 1)
 
         self.exportcsvA = QtGui.QPushButton(self.frame_3)
@@ -436,7 +436,7 @@ class Ui_MainWindow(object):
 
         self.comboBox_2 = QtGui.QComboBox(self.frame_8)
         self.comboBox_2.setObjectName(_fromUtf8("comboBox_2"))
-        self.comboBox_2.addItems(filter(lambda k: 'Aforos_' in k, self.lista())) 
+        self.comboBox_2.addItems(filter(lambda k: '_Aforos' in k, self.lista())) 
         self.gridLayout_7.addWidget(self.comboBox_2, 0, 1, 1, 1)
 
         self.label_27 = QtGui.QLabel(self.frame_8)
@@ -621,7 +621,7 @@ class Ui_MainWindow(object):
 
         self.comboBox_3 = QtGui.QComboBox(self.frame_10)
         self.comboBox_3.setObjectName(_fromUtf8("comboBox_3"))
-        self.comboBox_3.addItems(filter(lambda k: 'Alertas_' in k, self.lista())) 
+        self.comboBox_3.addItems(filter(lambda k: '_Alertas' in k, self.lista())) 
         self.gridLayout_14.addWidget(self.comboBox_3, 1, 0, 1, 1)
 
         self.actualizar4 = QtGui.QPushButton(self.frame_10)
@@ -995,23 +995,23 @@ class Ui_MainWindow(object):
         codigo=self.nombreEstacion.text()
 
 
-        cursor.execute ("""CREATE TABLE IF NOT EXISTS Niveles_Convencionales_"""+str(codigo)+""" (fecha DATE,n1 REAL,
+        cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Niveles_Convencionales (fecha DATE,n1 REAL,
                 n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
                 n13 REAL,n14 REAL,n15 REAL,n16 REAL,n17 REAL,n18 REAL,n19 REAL,n20 REAL,n21 REAL,n22 REAL,n23 REAL,
                 n24 REAL)""")
         
-        cursor.execute ("""CREATE TABLE IF NOT EXISTS Niveles_Automaticos_"""+str(codigo)+""" (fecha DATE,n1 REAL,
+        cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Niveles_Automaticos (fecha DATE,n1 REAL,
                 n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
                 n13 REAL,n14 REAL,n15 REAL,n16 REAL,n17 REAL,n18 REAL,n19 REAL,n20 REAL,n21 REAL,n22 REAL,n23 REAL,
                 n24 REAL)""")
                 
         
         
-        cursor.execute ("""CREATE TABLE IF NOT EXISTS Aforos_"""+str(codigo)+""" (fecha DATE,N REAL,q REAL,area REAL,V REAL,
+        cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Aforos (fecha DATE,N REAL,q REAL,area REAL,V REAL,
             ti REAL,tc REAL,td REAL,L REAL,b REAL,K REAL)""")
             
         
-        cursor.execute ("""CREATE TABLE IF NOT EXISTS Alertas_"""+str(codigo)+""" (fecha DATE,
+        cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Alertas (fecha DATE,
              h_ama REAL,h_nar REAL,h_roj REAL)""")
              
         return True
@@ -1143,15 +1143,52 @@ class Ui_MainWindow(object):
         except:
             print("")
 
-
+    #modificar la ruta de guardado de datos
     def exportCSV1(self):
-        with open("datos.csv", "wb") as write_file:
-            conn=sqlite3.connect('caudales.bd')
-            cursor = conn.cursor()
-            for row in cursor.execute("SELECT * FROM "+ str(self.menuEstaciones.currentText())):
-                write_file.write(str(row))
-            
-            cursor.close()
+
+        ora_conn =sqlite3.connect("caudales.bd")
+        df_ora = pd.read_sql('select * from '+str(self.menuEstaciones.currentText()), con=ora_conn)  
+        df_ora.to_csv('datos.csv',index_label=False,index=False)
+
+    def exportCSV2(self):
+
+        ora_conn =sqlite3.connect("caudales.bd")
+        df_ora = pd.read_sql('select * from '+str(self.comboBox.currentText()), con=ora_conn)  
+        df_ora.to_csv('datos.csv',index_label=False,index=False)
+
+    def exportCSV3(self):
+
+        ora_conn =sqlite3.connect("caudales.bd")
+        df_ora = pd.read_sql('select * from '+str(self.comboBox_2.currentText()), con=ora_conn)  
+        df_ora.to_csv('datos.csv',index_label=False,index=False)
+
+    def exportCSV4(self):
+        "exportar datos de la tabla a un csv"
+        ora_conn =sqlite3.connect("caudales.bd")
+        df_ora = pd.read_sql('select * from '+str(self.comboBox_3.currentText()), con=ora_conn)  
+        df_ora.to_csv('datos.csv',index_label=False,index=False)
+
+    def filtrarConvencionales(self):
+        conn = sqlite3.connect("caudales.bd")
+        cursor = conn.cursor()
+
+        date1=str(self.busqueda1.text())
+        result = tuple(date1.split('/'))
+        date = dt.date(year=result[0], month=result[1], day=int(result[2])+10)
+        date2 = date.strftime("%Y/%m/%d")
+
+        cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha BETWEEN '+date1+" AND "+date2)  
+
+        self.tabla1.clear()
+        self.tabla1.setRowCount(0);
+        self.tabla1.setColumnCount(25)
+        self.tabla1.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)])
+        for row,form in enumerate(cursor):
+            self.tabla1.insertRow(row)
+            for column,item in enumerate(form):
+                self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))        
+
+
     def ayuda(self):
         msgBox = QtGui.QMessageBox()
         msgBox.setText("""
@@ -1164,6 +1201,8 @@ class Ui_MainWindow(object):
 
         """)
         ret = msgBox.exec_()
+
+
 
 
 if __name__ == "__main__":
