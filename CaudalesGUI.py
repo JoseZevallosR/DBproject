@@ -1003,15 +1003,17 @@ class Ui_MainWindow(object):
         "Guarda los nuevos registros del Aforo"
         conn = sqlite3.connect("caudales.bd")
         cursor = conn.cursor()
-
-
+        self.registro=(str(self.fecha3.text()),str(self.nivel.text()),str(self.caudal.text()),str(self.area.text()),str(self.velocidad.text()),str(self.ti.text()),str(self.tc.text()),str(self.td.text()),str(self.dist_2.text()),str(self.ancho.text()),str(self.factork.text()))
+        cursor.execute("""INSERT INTO """+str(self.comboBox_2.currentText())+ """(fecha,N,q,area,V,ti,tc,td,L,b,K)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?)""",self.registro)
+        conn.commit()
         self.Actualizar_Aforo()
 
     def Guardar_click4(self):
         "Guarda los nuevos registros de Alertas"
         conn = sqlite3.connect("caudales.bd")
         cursor = conn.cursor()
-        self.fechas=str(self.fecha3.text())
+        self.fechas=str(self.fecha4.text())
         self.a=str(self.amarilla.text())
         self.n=str(self.naranja.text())
         self.r=str(self.roja.text())
