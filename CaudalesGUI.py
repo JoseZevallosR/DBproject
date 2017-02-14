@@ -387,6 +387,7 @@ class Ui_MainWindow(object):
 
         self.borrar2 = QtGui.QPushButton(self.frame_3)
         self.borrar2.setObjectName(_fromUtf8("borrar2"))
+        self.borrar2.clicked.connect(self.borrarAuto)
         self.gridLayout_12.addWidget(self.borrar2, 2, 2, 1, 1)
 
         self.guardar2 = QtGui.QPushButton(self.frame_3)
@@ -402,10 +403,12 @@ class Ui_MainWindow(object):
         self.comboBox = QtGui.QComboBox(self.frame_3)
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
         self.comboBox.addItems(filter(lambda k: '_Niveles_Automaticos' in k, self.lista()))  
+        self.comboBox.activated.connect(self.Actualizar_Auto)
         self.gridLayout_12.addWidget(self.comboBox, 1, 0, 1, 1)
 
         self.exportcsvA = QtGui.QPushButton(self.frame_3)
         self.exportcsvA.setObjectName(_fromUtf8("exportcsvA"))
+        self.exportcsvA.clicked.connect(self.exportCSV2)#exportar a un csv
         self.gridLayout_12.addWidget(self.exportcsvA, 2, 4, 1, 1)
         self.label_8 = QtGui.QLabel(self.frame_3)
         self.label_8.setObjectName(_fromUtf8("label_8"))
@@ -448,6 +451,7 @@ class Ui_MainWindow(object):
         self.comboBox_2 = QtGui.QComboBox(self.frame_8)
         self.comboBox_2.setObjectName(_fromUtf8("comboBox_2"))
         self.comboBox_2.addItems(filter(lambda k: '_Aforos' in k, self.lista())) 
+        self.comboBox_2.activated.connect(self.Actualizar_Aforo)
         self.gridLayout_7.addWidget(self.comboBox_2, 0, 1, 1, 1)
 
         self.label_27 = QtGui.QLabel(self.frame_8)
@@ -464,10 +468,12 @@ class Ui_MainWindow(object):
 
         self.guardar3 = QtGui.QPushButton(self.frame_8)
         self.guardar3.setObjectName(_fromUtf8("guardar3"))
+        self.guardar3.clicked.connect(self.Guardar_click3)
         self.gridLayout_7.addWidget(self.guardar3, 1, 1, 1, 1)
 
         self.borrar3 = QtGui.QPushButton(self.frame_8)
         self.borrar3.setObjectName(_fromUtf8("borrar3"))
+        self.borrar3.clicked.connect(self.borrarAforo)
         self.gridLayout_7.addWidget(self.borrar3, 1, 2, 1, 1)
 
         self.csvaforo = QtGui.QPushButton(self.frame_8)
@@ -477,6 +483,7 @@ class Ui_MainWindow(object):
 
         self.exportcsvAf = QtGui.QPushButton(self.frame_8)
         self.exportcsvAf.setObjectName(_fromUtf8("exportcsvAf"))
+        self.exportcsvAf.clicked.connect(self.exportCSV3)
         self.gridLayout_7.addWidget(self.exportcsvAf, 1, 4, 1, 1)
         self.gridLayout_8.addWidget(self.frame_8, 0, 0, 1, 1)
         self.frame_7 = QtGui.QFrame(self.tab_3)
@@ -645,6 +652,7 @@ class Ui_MainWindow(object):
         self.comboBox_3 = QtGui.QComboBox(self.frame_10)
         self.comboBox_3.setObjectName(_fromUtf8("comboBox_3"))
         self.comboBox_3.addItems(filter(lambda k: '_Alertas' in k, self.lista())) 
+        self.comboBox_3.activated.connect(self.Actualizar_Alerta)
         self.gridLayout_14.addWidget(self.comboBox_3, 1, 0, 1, 1)
 
         self.actualizar4 = QtGui.QPushButton(self.frame_10)
@@ -659,6 +667,7 @@ class Ui_MainWindow(object):
 
         self.borrar4 = QtGui.QPushButton(self.frame_10)
         self.borrar4.setObjectName(_fromUtf8("borrar4"))
+        self.borrar4.clicked.connect(self.borrarAlerta)
         self.gridLayout_14.addWidget(self.borrar4, 1, 4, 1, 1)
 
         self.csvalertas = QtGui.QPushButton(self.frame_10)
@@ -668,6 +677,7 @@ class Ui_MainWindow(object):
 
         self.exportcsvAl = QtGui.QPushButton(self.frame_10)
         self.exportcsvAl.setObjectName(_fromUtf8("exportcsvAl"))
+        self.exportcsvAl.clicked.connect(self.exportCSV4)
         self.gridLayout_14.addWidget(self.exportcsvAl, 1, 6, 1, 1)
         self.gridLayout_15.addWidget(self.frame_10, 0, 0, 1, 1)
         self.ventana.addTab(self.tab_4, _fromUtf8(""))
@@ -773,6 +783,9 @@ class Ui_MainWindow(object):
         self.fecha4.setText(time.strftime("%Y-%m-%d"))
 
         self.tabla1.itemChanged.connect(self.Actualizarcelda1)
+        self.tabal2.itemChanged.connect(self.Actualizarcelda2)
+        self.tabla3.itemChanged.connect(self.Actualizarcelda3)
+        self.tabla4.itemChanged.connect(self.Actualizarcelda4)
 ##################33
     def Actualizar_Manual(self):
         conn = sqlite3.connect("caudales.bd")
@@ -1096,7 +1109,38 @@ class Ui_MainWindow(object):
         cursor.close()
         self.Actualizar_Manual()
 
+    def borrarAuto(self):
+        conn=sqlite3.connect('caudales.bd')
+        cursor = conn.cursor()
 
+        data3 = str(self.tabal2.currentItem().text())
+        aa=cursor.execute("DELETE FROM "+ str(self.comboBox.currentText()) +" WHERE fecha=?", (data3,))
+        #cursor.execute("DELETE FROM Zoznam WHERE Name=?", (data3,))  
+        conn.commit()
+        cursor.close()
+        self.Actualizar_Auto()
+
+    def borrarAforo(self):
+        conn=sqlite3.connect('caudales.bd')
+        cursor = conn.cursor()
+
+        data3 = str(self.tabla3.currentItem().text())
+        aa=cursor.execute("DELETE FROM "+ str(self.comboBox_2.currentText()) +" WHERE fecha=?", (data3,))
+        #cursor.execute("DELETE FROM Zoznam WHERE Name=?", (data3,))  
+        conn.commit()
+        cursor.close()
+        self.Actualizar_Aforo()
+
+    def borrarAlerta(self):
+        conn=sqlite3.connect('caudales.bd')
+        cursor = conn.cursor()
+
+        data3 = str(self.tabla4.currentItem().text())
+        aa=cursor.execute("DELETE FROM "+ str(self.comboBox_3.currentText()) +" WHERE fecha=?", (data3,))
+        #cursor.execute("DELETE FROM Zoznam WHERE Name=?", (data3,))  
+        conn.commit()
+        cursor.close()
+        self.Actualizar_Alerta()
 
     def Actualizarcelda1(self):
         "modificar las celdas de la estaciones Convencionales"
@@ -1128,7 +1172,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.comboBox.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Manual()
+            self.Actualizar_Auto()
         except:
             print("")
 
@@ -1145,7 +1189,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.comboBox_2.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Manual()
+            self.Actualizar_Aforo()
         except:
             print("")
 
@@ -1162,7 +1206,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.comboBox_3.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Manual()
+            self.Actualizar_Alerta()
         except:
             print("")
 
@@ -1199,9 +1243,8 @@ class Ui_MainWindow(object):
         #result = tuple(date1.split('/'))
         #date = dt.date(year=result[0], month=result[1], day=int(result[2])+10)
         #date2 = date.strftime("%Y/%m/%d")
-
-        cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha BETWEEN '+date1+" AND "+date2)  
-
+        cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha = '+date1)# BETWEEN '+date1+" AND "+date2)  
+        print cursor.fetchall()
         self.tabla1.clear()
         self.tabla1.setRowCount(0);
         self.tabla1.setColumnCount(25)
@@ -1209,6 +1252,7 @@ class Ui_MainWindow(object):
         for row,form in enumerate(cursor):
             self.tabla1.insertRow(row)
             for column,item in enumerate(form):
+                print item
                 self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))        
 
     def tablaMaestro():
