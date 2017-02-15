@@ -34,6 +34,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1798, 955)
+        self.rutaBD=''
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.gridLayout = QtGui.QGridLayout(self.centralwidget)
@@ -203,7 +204,6 @@ class Ui_MainWindow(object):
 
         self.menuEstaciones = QtGui.QComboBox(self.frame_5)
         self.menuEstaciones.setObjectName(_fromUtf8("menuEstaciones"))
-        self.menuEstaciones.addItems(filter(lambda k: '_Niveles_Convencionales' in k, self.lista()))  
         self.menuEstaciones.activated.connect(self.Actualizar_Manual)#actualiza ni bien uno escoje el combo
         self.gridLayout_9.addWidget(self.menuEstaciones, 1, 1, 1, 1)
 
@@ -479,7 +479,6 @@ class Ui_MainWindow(object):
 
         self.comboBox = QtGui.QComboBox(self.frame_19)
         self.comboBox.setObjectName(_fromUtf8("comboBox"))
-        self.comboBox.addItems(filter(lambda k: '_Niveles_Automaticos' in k, self.lista()))  
         self.comboBox.activated.connect(self.Actualizar_Auto)
         self.gridLayout_12.addWidget(self.comboBox, 0, 1, 1, 1)
 
@@ -544,7 +543,6 @@ class Ui_MainWindow(object):
 
         self.comboBox_2 = QtGui.QComboBox(self.frame_8)
         self.comboBox_2.setObjectName(_fromUtf8("comboBox_2"))
-        self.comboBox_2.addItems(filter(lambda k: '_Aforos' in k, self.lista())) 
         self.comboBox_2.activated.connect(self.Actualizar_Aforo)
         self.gridLayout_7.addWidget(self.comboBox_2, 0, 1, 1, 1)
 
@@ -1018,6 +1016,8 @@ class Ui_MainWindow(object):
         self.actionDesarrolladores.setText(_translate("MainWindow", "Desarrolladores", None))
         self.actionAbrir_Base.setText(_translate("MainWindow", "Abrir Base", None))
 
+
+        
         self.N6.setStyleSheet("border: 2px solid blue;")
         self.N10.setStyleSheet("border: 2px solid blue;")
         self.N14.setStyleSheet("border: 2px solid blue;")
@@ -1034,7 +1034,7 @@ class Ui_MainWindow(object):
         self.tabla4.itemChanged.connect(self.Actualizarcelda4)
 ##################33
     def Actualizar_Manual(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         
         #str(combobox1.currentText())
@@ -1064,7 +1064,7 @@ class Ui_MainWindow(object):
 
 
     def Actualizar_Auto(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         
         #str(combobox1.currentText())
@@ -1094,7 +1094,7 @@ class Ui_MainWindow(object):
 
 
     def Actualizar_Aforo(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         
         #str(combobox1.currentText())
@@ -1123,7 +1123,7 @@ class Ui_MainWindow(object):
                     self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
     def Actualizar_Alerta(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         
         #str(combobox1.currentText())
@@ -1152,7 +1152,7 @@ class Ui_MainWindow(object):
                     self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
     def Actualizar_Caudal(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         
         #str(combobox1.currentText())
@@ -1181,7 +1181,7 @@ class Ui_MainWindow(object):
                     self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
     def Guardar_click(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         self.fecha= str(self.fecha1.text())
         self.nivel1 = str(self.N1.text())
@@ -1249,7 +1249,7 @@ class Ui_MainWindow(object):
         self.Actualizar_Manual()
 
     def Guardar_click2(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         self.fecha= str(self.fecha2.text())
         self.nivel1 = str(self.N1_2.text())
@@ -1318,7 +1318,7 @@ class Ui_MainWindow(object):
 
     def Guardar_click3(self):
         "Guarda los nuevos registros del Aforo"
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         self.registro=(str(self.fecha3.text()),str(self.nivel.text()),str(self.caudal.text()),str(self.area.text()),str(self.velocidad.text()),str(self.ti.text()),str(self.tc.text()),str(self.td.text()),str(self.dist_2.text()),str(self.ancho.text()),str(self.factork.text()))
         cursor.execute("""INSERT INTO """+str(self.comboBox_2.currentText())+ """(fecha,N,q,area,V,ti,tc,td,L,b,K)
@@ -1328,7 +1328,7 @@ class Ui_MainWindow(object):
 
     def Guardar_click4(self):
         "Guarda los nuevos registros de Alertas"
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         self.fechas=str(self.fecha4.text())
         self.a=str(self.amarilla.text())
@@ -1344,7 +1344,7 @@ class Ui_MainWindow(object):
         self.Actualizar_Alerta()
 
     def tablaCreacion(self):
-        conn=sqlite3.connect("caudales.bd")
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
 
         nombre=self.nombreEstacion.text()
@@ -1379,20 +1379,13 @@ class Ui_MainWindow(object):
         return True
             
 
-    def lista(self):
-        "lista todas las tablas contenidas en la base de datos"
-        conn=sqlite3.connect('caudales.bd')
-        cursor = conn.cursor()
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        resul=cursor.fetchall()
-        re=[resul[i][0] for i in range(len(resul))]
-        return re
+
 
     def csvFile(self):
         "funcion para cargar datos csv a los datos automaticos sqlite"
         self.archivolocacion = QtGui.QFileDialog.getOpenFileName()
         print "La locacion de su archivo es : "+ self.archivolocacion
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         df = pd.read_csv(str(self.archivolocacion))
         df.to_sql(str(self.comboBox.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Auto()
@@ -1401,7 +1394,7 @@ class Ui_MainWindow(object):
         "funcion para cargar datos csv a los datos automaticos sqlite"
         self.archivolocacion = QtGui.QFileDialog.getOpenFileName()
         print "La locacion de su archivo es : "+ self.archivolocacion
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         df = pd.read_csv(str(self.archivolocacion))
         df.to_sql(str(self.menuEstaciones.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Manual()
@@ -1410,7 +1403,7 @@ class Ui_MainWindow(object):
         "funcion para cargar datos csv a los datos automaticos sqlite"
         self.archivolocacion = QtGui.QFileDialog.getOpenFileName()
         print "La locacion de su archivo es : "+ self.archivolocacion
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         df = pd.read_csv(str(self.archivolocacion))
         df.to_sql(str(self.comboBox_2.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Aforo()
@@ -1419,13 +1412,13 @@ class Ui_MainWindow(object):
         "funcion para cargar datos csv a los datos automaticos sqlite"
         self.archivolocacion = QtGui.QFileDialog.getOpenFileName()
         print "La locacion de su archivo es : "+ self.archivolocacion
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         df = pd.read_csv(str(self.archivolocacion))
         df.to_sql(str(self.comboBox_3.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Alerta()
 
     def borrarL(self):
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
 
         data3 = str(self.tabla1.currentItem().text())
@@ -1436,7 +1429,7 @@ class Ui_MainWindow(object):
         self.Actualizar_Manual()
 
     def borrarAuto(self):
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
 
         data3 = str(self.tabal2.currentItem().text())
@@ -1447,7 +1440,7 @@ class Ui_MainWindow(object):
         self.Actualizar_Auto()
 
     def borrarAforo(self):
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
 
         data3 = str(self.tabla3.currentItem().text())
@@ -1458,7 +1451,7 @@ class Ui_MainWindow(object):
         self.Actualizar_Aforo()
 
     def borrarAlerta(self):
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
 
         data3 = str(self.tabla4.currentItem().text())
@@ -1469,7 +1462,7 @@ class Ui_MainWindow(object):
         self.Actualizar_Alerta()
 
     def borrarCaudal(self):
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
 
         data3 = str(self.tabla6.currentItem().text())
@@ -1481,7 +1474,7 @@ class Ui_MainWindow(object):
 
     def Actualizarcelda1(self):
         "modificar las celdas de la estaciones Convencionales"
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         column=self.tabla1.currentColumn()
         row=self.tabla1.currentRow()
@@ -1498,7 +1491,7 @@ class Ui_MainWindow(object):
 
     def Actualizarcelda2(self):
         "modificar las celdas de la estaciones Convencionales"
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         column=self.tabal2.currentColumn()
         row=self.tabal2.currentRow()
@@ -1515,7 +1508,7 @@ class Ui_MainWindow(object):
 
     def Actualizarcelda3(self):
         "modificar las celdas de la estaciones Convencionales"
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         column=self.tabla3.currentColumn()
         row=self.tabla3.currentRow()
@@ -1532,7 +1525,7 @@ class Ui_MainWindow(object):
 
     def Actualizarcelda4(self):
         "modificar las celdas de la estaciones Convencionales"
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         column=self.tabla4.currentColumn()
         row=self.tabla4.currentRow()
@@ -1549,7 +1542,7 @@ class Ui_MainWindow(object):
 
     def Actualizarcelda5(self):
         "modificar las celdas Caudales"
-        conn=sqlite3.connect('caudales.bd')
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         column=self.tabla6.currentColumn()
         row=self.tabla1.currentRow()
@@ -1567,36 +1560,36 @@ class Ui_MainWindow(object):
     #modificar la ruta de guardado de datos
     def exportCSV1(self):
 
-        ora_conn =sqlite3.connect("caudales.bd")
+        ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.menuEstaciones.currentText()), con=ora_conn)  
         df_ora.to_csv('datos.csv',index_label=False,index=False)
 
     def exportCSV2(self):
 
-        ora_conn =sqlite3.connect("caudales.bd")
+        ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox.currentText()), con=ora_conn)  
         df_ora.to_csv('datos.csv',index_label=False,index=False)
 
     def exportCSV3(self):
 
-        ora_conn =sqlite3.connect("caudales.bd")
+        ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox_2.currentText()), con=ora_conn)  
         df_ora.to_csv('datos.csv',index_label=False,index=False)
 
     def exportCSV4(self):
         "exportar datos de la tabla a un csv"
-        ora_conn =sqlite3.connect("caudales.bd")
+        ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox_3.currentText()), con=ora_conn)  
         df_ora.to_csv('datos.csv',index_label=False,index=False)
 
     def exportCSV5(self):
         "exportar datos de la tabla a un csv"
-        ora_conn =sqlite3.connect("caudales.bd")
+        ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox_4.currentText()), con=ora_conn)  
         df_ora.to_csv('datos.csv',index_label=False,index=False)
 
     def filtrarConvencionales(self):
-        conn = sqlite3.connect("caudales.bd")
+        conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         date1=str(self.busqueda11.text())
         date2=str(self.busqueda1.text())
@@ -1615,8 +1608,8 @@ class Ui_MainWindow(object):
                 print item
                 self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))        
 
-    def tablaMaestro():
-        conn=sqlite3.connect("caudales.bd")
+    def tablaMaestro(self):
+        conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         cursor.execute ("""CREATE TABLE IF NOT EXISTS Maestro (Codigo string,
         Nombre string,DRE string,SisHidro string,
@@ -1637,9 +1630,23 @@ class Ui_MainWindow(object):
         """)
         ret = msgBox.exec_()
 
-    def openDB():
+    def lista(self):
+        "lista todas las tablas contenidas en la base de datos"
+        conn=sqlite3.connect(self.rutaBD)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        resul=cursor.fetchall()
+        re=[resul[i][0] for i in range(len(resul))]
+
+        return re
+    def openDB(self):
         "localizar la base de datos correspodiente"
-        pass
+        self.rutaBD=str(QtGui.QFileDialog.getOpenFileName())
+        lista=self.lista()
+        self.menuEstaciones.addItems(filter(lambda k: '_Niveles_Convencionales' in k,lista))
+        self.comboBox.addItems(filter(lambda k: '_Niveles_Automaticos' in k, lista))  
+        self.comboBox_2.addItems(filter(lambda k: '_Aforos' in k, lista)) 
+        self.comboBox_3.addItems(filter(lambda k: '_Alertas' in k, lista)) 
 
 
 
