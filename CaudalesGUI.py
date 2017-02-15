@@ -722,7 +722,7 @@ class Ui_MainWindow(object):
         self.csvconvencional.setText(_translate("MainWindow", "Importar csv", None))
         self.exportcsvM.setText(_translate("MainWindow", "Exportar csv", None))
         self.label_7.setText(_translate("MainWindow", "Edicion de Tablas", None))
-        self.actualizar1.setText(_translate("MainWindow", "Actualizar", None))
+        self.actualizar1.setText(_translate("MainWindow", "Filtrar", None))
         self.guardar1.setText(_translate("MainWindow", "Guardar", None))
         self.borrar1.setText(_translate("MainWindow", "Borrar", None))
         self.label.setText(_translate("MainWindow", "Busqueda", None))
@@ -733,12 +733,12 @@ class Ui_MainWindow(object):
         self.importcsv.setText(_translate("MainWindow", "Importar csv", None))
         self.exportcsvA.setText(_translate("MainWindow", "Exportar csv", None))
         self.label_8.setText(_translate("MainWindow", "Escoger tabla", None))
-        self.actualizar2.setText(_translate("MainWindow", "Actualizar", None))
+        self.actualizar2.setText(_translate("MainWindow", "Filtrar", None))
         self.label_26.setText(_translate("MainWindow", "Fecha", None))
         self.ventana.setTabText(self.ventana.indexOf(self.tab_2), _translate("MainWindow", "Niveles Automaticos", None))
         self.label_17.setText(_translate("MainWindow", "Edicion de Tablas", None))
         self.label_27.setText(_translate("MainWindow", "Fecha", None))
-        self.actualizar3.setText(_translate("MainWindow", "Actualizar", None))
+        self.actualizar3.setText(_translate("MainWindow", "Filtrar", None))
         self.guardar3.setText(_translate("MainWindow", "Guardar", None))
         self.borrar3.setText(_translate("MainWindow", "Borrar", None))
         self.csvaforo.setText(_translate("MainWindow", "Importar csv", None))
@@ -761,7 +761,7 @@ class Ui_MainWindow(object):
         self.label_4.setText(_translate("MainWindow", "Busqueda", None))
         self.label_18.setText(_translate("MainWindow", "Edicion de Tablas", None))
         self.label_28.setText(_translate("MainWindow", "fecha", None))
-        self.actualizar4.setText(_translate("MainWindow", "Actualizar", None))
+        self.actualizar4.setText(_translate("MainWindow", "Filtrar", None))
         self.guardar4.setText(_translate("MainWindow", "Guardar", None))
         self.borrar4.setText(_translate("MainWindow", "Borrar", None))
         self.csvalertas.setText(_translate("MainWindow", "Import csv", None))
@@ -801,10 +801,21 @@ class Ui_MainWindow(object):
 
         self.tabla1.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)])
 
-        for row,form in enumerate(cursor):
-            self.tabla1.insertRow(row)
-            for column,item in enumerate(form):
-                self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+        numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.menuEstaciones.currentText())).fetchall()[0][0]
+        if numRows<=364:
+            cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText()))    
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
+        else:
+            cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
 
     def Actualizar_Auto(self):
         conn = sqlite3.connect("caudales.bd")
@@ -820,10 +831,21 @@ class Ui_MainWindow(object):
 
         self.tabal2.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)])
 
-        for row,form in enumerate(cursor):
-            self.tabal2.insertRow(row)
-            for column,item in enumerate(form):
-                self.tabal2.setItem(row,column,QtGui.QTableWidgetItem(str(item)))
+        numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox.currentText())).fetchall()[0][0]
+        if numRows<=364:
+            cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText()))    
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
+        else:
+            cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
 
     def Actualizar_Aforo(self):
         conn = sqlite3.connect("caudales.bd")
@@ -839,10 +861,20 @@ class Ui_MainWindow(object):
 
         self.tabla3.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,11)])
 
-        for row,form in enumerate(cursor):
-            self.tabla3.insertRow(row)
-            for column,item in enumerate(form):
-                self.tabla3.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+        numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_2.currentText())).fetchall()[0][0]
+        if numRows<=364:
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText()))    
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
+        else:
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText())+' limit '+str(numRows-366)+','+str(numRows))  #selecciona el ultimo año previo al valor observado al final  
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
     def Actualizar_Alerta(self):
         conn = sqlite3.connect("caudales.bd")
@@ -858,10 +890,20 @@ class Ui_MainWindow(object):
 
         self.tabla4.setHorizontalHeaderLabels(['fecha']+['A'+str(x) for x in range(1,4)])
 
-        for row,form in enumerate(cursor):
-            self.tabla4.insertRow(row)
-            for column,item in enumerate(form):
-                self.tabla4.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+        numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_3.currentText())).fetchall()[0][0]
+        if numRows<=364:
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText()))    
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
+        else:
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+            for row,form in enumerate(cursor):
+                self.tabla1.insertRow(row)
+                for column,item in enumerate(form):
+                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
     def Guardar_click(self):
         conn = sqlite3.connect("caudales.bd")
@@ -1032,28 +1074,27 @@ class Ui_MainWindow(object):
 
         codigo=self.nombreEstacion.text()
 
-
         cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Niveles_Convencionales (fecha DATE,n1 REAL,
-                n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
-                n13 REAL,n14 REAL,n15 REAL,n16 REAL,n17 REAL,n18 REAL,n19 REAL,n20 REAL,n21 REAL,n22 REAL,n23 REAL,
-                n24 REAL)""")
-        
+                    n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
+                    n13 REAL,n14 REAL,n15 REAL,n16 REAL,n17 REAL,n18 REAL,n19 REAL,n20 REAL,n21 REAL,n22 REAL,n23 REAL,
+                    n24 REAL ,codigo REAL, FOREIGN KEY(codigo) REFERENCES Maestro(Codigo))""")
+                    
         cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Niveles_Automaticos (fecha DATE,n1 REAL,
-                n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
-                n13 REAL,n14 REAL,n15 REAL,n16 REAL,n17 REAL,n18 REAL,n19 REAL,n20 REAL,n21 REAL,n22 REAL,n23 REAL,
-                n24 REAL)""")
-                
-        
-        
-        cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Aforos (fecha DATE,N REAL,q REAL,area REAL,V REAL,
-            ti REAL,tc REAL,td REAL,L REAL,b REAL,K REAL)""")
+                    n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
+                    n13 REAL,n14 REAL,n15 REAL,n16 REAL,n17 REAL,n18 REAL,n19 REAL,n20 REAL,n21 REAL,n22 REAL,n23 REAL,
+                    n24 REAL,codigo REAL,FOREIGN KEY(codigo) REFERENCES Maestro(Codigo))""")
+                    
             
-        
+            
+        cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Aforos (fecha DATE,N REAL,q REAL,area REAL,V REAL,
+                ti REAL,tc REAL,td REAL,L REAL,b REAL,K REAL,codigo REAL,FOREIGN KEY(codigo) REFERENCES Maestro(Codigo))""")
+                
+            
         cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(codigo)+"""_Alertas (fecha DATE,
-             h_ama REAL,h_nar REAL,h_roj REAL)""")
-             
+                 h_ama REAL,h_nar REAL,h_roj REAL,codigo REAL,FOREIGN KEY(codigo) REFERENCES Maestro(Codigo))""")
+                 
         return True
-        
+            
 
     def lista(self):
         "lista todas las tablas contenidas en la base de datos"
