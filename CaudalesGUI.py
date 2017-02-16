@@ -196,9 +196,11 @@ class Ui_MainWindow(object):
         self.frame_5.setObjectName(_fromUtf8("frame_5"))
         self.gridLayout_9 = QtGui.QGridLayout(self.frame_5)
         self.gridLayout_9.setObjectName(_fromUtf8("gridLayout_9"))
+
         self.label_5 = QtGui.QLabel(self.frame_5)
         self.label_5.setObjectName(_fromUtf8("label_5"))
-        self.gridLayout_9.addWidget(self.label_5, 0, 0, 1, 2)
+        self.gridLayout_9.addWidget(self.label_5, 0, 0, 1, 1)
+
         self.label_6 = QtGui.QLabel(self.frame_5)
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.gridLayout_9.addWidget(self.label_6, 1, 0, 1, 1)
@@ -206,14 +208,15 @@ class Ui_MainWindow(object):
         self.menuEstaciones = QtGui.QComboBox(self.frame_5)
         self.menuEstaciones.setObjectName(_fromUtf8("menuEstaciones"))
         self.menuEstaciones.activated.connect(self.Actualizar_Manual)#actualiza ni bien uno escoje el combo
-        self.gridLayout_9.addWidget(self.menuEstaciones, 1, 1, 1, 1)
+        self.gridLayout_9.addWidget(self.menuEstaciones, 1, 2, 1, 2)
 
         self.label_25 = QtGui.QLabel(self.frame_5)
         self.label_25.setObjectName(_fromUtf8("label_25"))
-        self.gridLayout_9.addWidget(self.label_25, 1, 2, 1, 1)
+        self.gridLayout_9.addWidget(self.label_25, 3, 0, 1, 1)
+
         self.fecha1 = QtGui.QLineEdit(self.frame_5)
         self.fecha1.setObjectName(_fromUtf8("fecha1"))
-        self.gridLayout_9.addWidget(self.fecha1, 1, 3, 1, 1)
+        self.gridLayout_9.addWidget(self.fecha1, 3, 3, 1, 1)
 
         self.csvconvencional = QtGui.QPushButton(self.frame_5)
         self.csvconvencional.setObjectName(_fromUtf8("csvconvencional"))
