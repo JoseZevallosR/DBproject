@@ -477,6 +477,7 @@ class Ui_MainWindow(object):
         self.frame_19.setObjectName(_fromUtf8("frame_19"))
         self.gridLayout_12 = QtGui.QGridLayout(self.frame_19)
         self.gridLayout_12.setObjectName(_fromUtf8("gridLayout_12"))
+
         self.label_8 = QtGui.QLabel(self.frame_19)
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.gridLayout_12.addWidget(self.label_8, 0, 0, 1, 1)
@@ -488,10 +489,12 @@ class Ui_MainWindow(object):
 
         self.label_26 = QtGui.QLabel(self.frame_19)
         self.label_26.setObjectName(_fromUtf8("label_26"))
-        self.gridLayout_12.addWidget(self.label_26, 0, 2, 1, 1)
+        self.gridLayout_12.addWidget(self.label_26, 1, 0, 1, 1)
+
         self.fecha2 = QtGui.QLineEdit(self.frame_19)
         self.fecha2.setObjectName(_fromUtf8("fecha2"))
-        self.gridLayout_12.addWidget(self.fecha2, 0, 3, 1, 1)
+        self.gridLayout_12.addWidget(self.fecha2, 1, 1, 1, 1)
+
         self.gridLayout_27.addWidget(self.frame_19, 0, 0, 1, 1)
         self.frame_20 = QtGui.QFrame(self.frame_3)
         self.frame_20.setFrameShape(QtGui.QFrame.StyledPanel)
