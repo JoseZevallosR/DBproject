@@ -35,6 +35,7 @@ class Ui_MainWindow(object):
         MainWindow.setObjectName(_fromUtf8("MainWindow"))
         MainWindow.resize(1798, 955)
         self.rutaBD=''
+        self.archivolocacion=''
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
         self.gridLayout = QtGui.QGridLayout(self.centralwidget)
@@ -771,8 +772,7 @@ class Ui_MainWindow(object):
 
         self.comboBox_4 = QtGui.QComboBox(self.frame_13)
         self.comboBox_4.setObjectName(_fromUtf8("comboBox_4"))
-        #self.comboBox_4.addItems(filter(lambda k: '_Alertas' in k, self.lista())) 
-        #self.comboBox_4.activated.connect(self.Actualizar_Caudal)
+        self.comboBox_4.activated.connect(self.Actualizar_Caudal)
         self.gridLayout_6.addWidget(self.comboBox_4, 0, 1, 1, 1)
 
         self.label_34 = QtGui.QLabel(self.frame_13)
@@ -781,8 +781,10 @@ class Ui_MainWindow(object):
         self.fecha5 = QtGui.QLineEdit(self.frame_13)
         self.fecha5.setObjectName(_fromUtf8("fecha5"))
         self.gridLayout_6.addWidget(self.fecha5, 1, 1, 1, 1)
+
         self.importCSVQ = QtGui.QPushButton(self.frame_13)
         self.importCSVQ.setObjectName(_fromUtf8("importCSVQ"))
+        self.importCSVQ.clicked.connect(self.csvFileQ)
         self.gridLayout_6.addWidget(self.importCSVQ, 1, 2, 1, 1)
 
         self.exportCSVQ = QtGui.QPushButton(self.frame_13)
@@ -793,12 +795,17 @@ class Ui_MainWindow(object):
         self.Filtrar5 = QtGui.QPushButton(self.frame_13)
         self.Filtrar5.setObjectName(_fromUtf8("Filtrar5"))
         self.gridLayout_6.addWidget(self.Filtrar5, 1, 4, 1, 1)
+
         self.guardar5 = QtGui.QPushButton(self.frame_13)
         self.guardar5.setObjectName(_fromUtf8("guardar5"))
+        self.guardar5.clicked.connect(self.Guardar_click5)
         self.gridLayout_6.addWidget(self.guardar5, 1, 5, 1, 1)
+
         self.borrar5 = QtGui.QPushButton(self.frame_13)
         self.borrar5.setObjectName(_fromUtf8("borrar5"))
+        self.borrar5.clicked.connect(self.borrarCaudal)
         self.gridLayout_6.addWidget(self.borrar5, 1, 6, 1, 1)
+
         self.gridLayout_20.addWidget(self.frame_13, 0, 0, 1, 1)
         self.frame_14 = QtGui.QFrame(self.tab_5)
         self.frame_14.setFrameShape(QtGui.QFrame.StyledPanel)
@@ -1027,11 +1034,13 @@ class Ui_MainWindow(object):
         self.fecha2.setText(time.strftime("%Y-%m-%d"))
         self.fecha3.setText(time.strftime("%Y-%m-%d"))
         self.fecha4.setText(time.strftime("%Y-%m-%d"))
+        self.fecha5.setText(time.strftime("%Y-%m-%d"))
 
         self.tabla1.itemChanged.connect(self.Actualizarcelda1)
         self.tabal2.itemChanged.connect(self.Actualizarcelda2)
         self.tabla3.itemChanged.connect(self.Actualizarcelda3)
         self.tabla4.itemChanged.connect(self.Actualizarcelda4)
+        self.tabla6.itemChanged.connect(self.Actualizarcelda5)
 ##################33
     def Actualizar_Manual(self):
         conn = sqlite3.connect(self.rutaBD)
@@ -1043,9 +1052,9 @@ class Ui_MainWindow(object):
         #nombre y tamaño de la celda
         self.tabla1.clear()
         self.tabla1.setRowCount(0);
-        self.tabla1.setColumnCount(25)
+        self.tabla1.setColumnCount(26)
 
-        self.tabla1.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)])
+        self.tabla1.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.menuEstaciones.currentText())).fetchall()[0][0]
         if numRows<=364:
@@ -1073,24 +1082,24 @@ class Ui_MainWindow(object):
         #nombre y tamaño de la celda
         self.tabal2.clear()
         self.tabal2.setRowCount(0);
-        self.tabal2.setColumnCount(25)
+        self.tabal2.setColumnCount(26)
 
-        self.tabal2.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)])
+        self.tabal2.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox.currentText())).fetchall()[0][0]
         if numRows<=364:
             cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText()))    
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabal2.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabal2.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
             cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabal2.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabal2.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
 
     def Actualizar_Aforo(self):
@@ -1103,24 +1112,24 @@ class Ui_MainWindow(object):
         #nombre y tamaño de la celda
         self.tabla3.clear()
         self.tabla3.setRowCount(0);
-        self.tabla3.setColumnCount(11)
+        self.tabla3.setColumnCount(12)
 
-        self.tabla3.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,11)])
+        self.tabla3.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,11)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_2.currentText())).fetchall()[0][0]
         if numRows<=364:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText()))    
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabla3.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabla3.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText())+' limit '+str(numRows-366)+','+str(numRows))  #selecciona el ultimo año previo al valor observado al final  
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabla3.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabla3.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
     def Actualizar_Alerta(self):
         conn = sqlite3.connect(self.rutaBD)
@@ -1132,54 +1141,74 @@ class Ui_MainWindow(object):
         #nombre y tamaño de la celda
         self.tabla4.clear()
         self.tabla4.setRowCount(0);
-        self.tabla4.setColumnCount(4)
+        self.tabla4.setColumnCount(5)
 
-        self.tabla4.setHorizontalHeaderLabels(['fecha']+['A'+str(x) for x in range(1,4)])
+        self.tabla4.setHorizontalHeaderLabels(['fecha']+['A'+str(x) for x in range(1,4)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_3.currentText())).fetchall()[0][0]
         if numRows<=364:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText()))    
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabla4.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabla4.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabla4.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabla4.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
 
     def Actualizar_Caudal(self):
         conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
         
         #str(combobox1.currentText())
-        cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText()))        
+        cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText()))        
      
         #nombre y tamaño de la celda
         self.tabla6.clear()
         self.tabla6.setRowCount(0);
-        self.tabla6.setColumnCount(4)
+        self.tabla6.setColumnCount(26)
 
-        self.tabla6.setHorizontalHeaderLabels(['fecha']+['A'+str(x) for x in range(1,24)])
+        self.tabla6.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_4.currentText())).fetchall()[0][0]
         if numRows<=364:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText()))    
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabla6.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabla6.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
             for row,form in enumerate(cursor):
-                self.tabla1.insertRow(row)
+                self.tabla6.insertRow(row)
                 for column,item in enumerate(form):
-                    self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+                    self.tabla6.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
+    def Actualizar_Maestro(self):
+        conn = sqlite3.connect(self.rutaBD)
+        cursor = conn.cursor()
+        
+        #str(combobox1.currentText())
+        cursor.execute('SELECT * FROM Maestro')        
+     
+        #nombre y tamaño de la celda
+        self.tabla5.clear()
+        self.tabla5.setRowCount(0);
+        self.tabla5.setColumnCount(15)
+        self.tabla5.setHorizontalHeaderLabels(['Codigo','Nombre','DRE','Sishidro',
+              'Cuenca','rio','DPTO','PROV','DISTRITO','LONG','LAT','ALT', 'Inicio','ENT','Q'])
+        for row,form in enumerate(cursor):
+            self.tabla5.insertRow(row)
+            for column,item in enumerate(form):
+                self.tabla5.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
+        
     def Guardar_click(self):
         conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
@@ -1343,19 +1372,99 @@ class Ui_MainWindow(object):
 
         self.Actualizar_Alerta()
 
+    def Guardar_click5(self):
+        conn = sqlite3.connect(self.rutaBD)
+        cursor = conn.cursor()
+
+        self.fecha= str(self.fecha5.text())
+        self.nivel1 = str(self.q1.text())
+        self.nivel2 = str(self.q2.text())
+        self.nivel3 = str(self.q3.text())
+        self.nivel4 = str(self.q4.text())
+        self.nivel5 = str(self.q5.text())
+        self.nivel6 = str(self.q6.text())
+        self.nivel7 = str(self.q7.text())
+        self.nivel8 = str(self.q8.text())
+        self.nivel9 = str(self.q9.text())
+        self.nivel10 = str(self.q10.text())
+        self.nivel11 = str(self.q11.text())
+        self.nivel12 = str(self.q12.text())
+        self.nivel13 = str(self.q13.text())
+        self.nivel14 = str(self.q14.text())
+        self.nivel15 = str(self.q15.text())
+        self.nivel16 = str(self.q16.text())
+        self.nivel17 = str(self.q17.text())
+        self.nivel18 = str(self.q18.text())
+        self.nivel19 = str(self.q19.text())
+        self.nivel20 = str(self.q20.text())
+        self.nivel21 = str(self.q21.text())
+        self.nivel22 = str(self.q22.text())
+        self.nivel23 = str(self.q23.text())
+        self.nivel24 = str(self.q24.text())
+
+
+        self.registro = (self.fecha,self.nivel1,self.nivel2,self.nivel3,self.nivel4,self.nivel5,self.nivel6,self.nivel7,self.nivel8,self.nivel9
+            ,self.nivel10,self.nivel11,self.nivel12,self.nivel13,self.nivel14,self.nivel15,self.nivel16,self.nivel17,self.nivel18
+            ,self.nivel19,self.nivel20,self.nivel21,self.nivel22,self.nivel23,self.nivel24)
+
+        cursor.execute("""INSERT INTO """+ str(self.comboBox_4.currentText())+ """ (fecha,n1,n2,n3,n4,n5,n6,n7,n8,n9,n10,n11,n12,n13,n14,n15,n16,n17,n18,n19,n20,n21,n22,n23,n24) 
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            """, self.registro)
+       
+        conn.commit()
+        #self.fecha2.setText(time.strftime("%Y-%m-%d"))
+        self.N1_2.setText("")
+        self.N2_2.setText("")
+        self.N3_2.setText("")
+        self.N4_2.setText("")
+        self.N5_2.setText("")
+        self.N6_2.setText("")
+        self.N7_2.setText("")
+        self.N8_2.setText("")
+        self.N9_2.setText("")
+        self.N10_2.setText("")
+        self.N11_2.setText("")
+        self.N12_2.setText("")
+        self.N13_2.setText("")
+        self.N14_2.setText("")
+        self.N15_2.setText("")
+        self.N16_2.setText("")
+        self.N17_2.setText("")
+        self.N18_2.setText("")
+        self.N19_2.setText("")
+        self.N20_2.setText("")
+        self.N21_2.setText("")
+        self.N22_2.setText("")
+        self.N23_2.setText("")
+        self.N24_2.setText("")
+        conn.commit()
+        #QMessageBox.information(self,"Registro guardado", "Aviso")
+        self.Actualizar_Caudal()
+
     def tablaCreacion(self):
         conn=sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
 
         nombre=self.nombreEstacion.text()
         codigo=self.codigoEstacion.text()
+        dre=self.lineEdit.text()
+        sishi=self.lineEdit_29.text()
+        cuen=self.lineEdit_30.text()
+        rio=self.lineEdit_31.text()
+        dpto=self.lineEdit_2.text()
+        prov=self.lineEdit_3.text()
+        lon=self.lineEdit_4.text()
+        lat=self.lineEdit_5.text()
+        alt=self.lineEdit_6.text()
+        ent=self.lineEdit_7.text()
+        q=self.lineEdit_8.text()
 
 
-        #registro=tuple(lt(tabla.iloc[k,:],n))
-        #cursor.execute("""INSERT INTO """+ "Maestro"+ """ (Codigo,Nombre,DRE,Sishidro,
-        #      Cuenca,rio,DPTO,PROV,DISTRITO,LONG,LAT,ALT, Inicio,ENT,Q) 
-        #     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
-        #     """,registro)
+        registro=(codigo,nombre,dre,sishi,cuen,rio,dpto,prov,lon,lat,alt,ent,q)
+        cursor.execute("""INSERT INTO """+ "Maestro"+ """ (Codigo,Nombre,DRE,Sishidro,
+              Cuenca,rio,DPTO,PROV,DISTRITO,LONG,LAT,ALT, Inicio,ENT,Q) 
+             VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+             """,registro)
 
         cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(nombre)+"""_Niveles_Convencionales (fecha DATE,n1 REAL,
                     n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
@@ -1375,6 +1484,11 @@ class Ui_MainWindow(object):
             
         cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(nombre)+"""_Alertas (fecha DATE,
                  h_ama REAL,h_nar REAL,h_roj REAL,codigo REAL,FOREIGN KEY(codigo) REFERENCES Maestro(Codigo))""")
+
+        cursor.execute ("""CREATE TABLE IF NOT EXISTS """+str(nombre)+"""_Caudales (fecha DATE,n1 REAL,
+                    n2 REAL,n3 REAL,n4 REAL,n5 REAL,n6 REAL,n7 REAL,n8 REAL,n9 REAL,n10 REAL,n11 REAL,n12 REAL,
+                    n13 REAL,n14 REAL,n15 REAL,n16 REAL,n17 REAL,n18 REAL,n19 REAL,n20 REAL,n21 REAL,n22 REAL,n23 REAL,
+                    n24 REAL ,codigo REAL, FOREIGN KEY(codigo) REFERENCES Maestro(Codigo))""")
                  
         return True
             
@@ -1416,6 +1530,16 @@ class Ui_MainWindow(object):
         df = pd.read_csv(str(self.archivolocacion))
         df.to_sql(str(self.comboBox_3.currentText()), conn, if_exists='append', index=False)
         self.Actualizar_Alerta()
+
+    def csvFileQ(self):
+        "funcion para cargar datos csv a los datos automaticos sqlite"
+        self.archivolocacion = QtGui.QFileDialog.getOpenFileName()
+        print "La locacion de su archivo es : "+ self.archivolocacion
+        conn=sqlite3.connect(self.rutaBD)
+        df = pd.read_csv(str(self.archivolocacion))
+        df.to_sql(str(self.comboBox_4.currentText()), conn, if_exists='append', index=False)
+        self.Actualizar_Caudal()
+
 
     def borrarL(self):
         conn=sqlite3.connect(self.rutaBD)
@@ -1559,44 +1683,44 @@ class Ui_MainWindow(object):
 
     #modificar la ruta de guardado de datos
     def exportCSV1(self):
-
+        name = QtGui.QFileDialog.getSaveFileName()
         ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.menuEstaciones.currentText()), con=ora_conn)  
-        df_ora.to_csv('datos.csv',index_label=False,index=False)
+        df_ora.to_csv(name,index_label=False,index=False)
 
     def exportCSV2(self):
-
+        name = QtGui.QFileDialog.getSaveFileName()
         ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox.currentText()), con=ora_conn)  
-        df_ora.to_csv('datos.csv',index_label=False,index=False)
+        df_ora.to_csv(name,index_label=False,index=False)
 
     def exportCSV3(self):
-
+        name = QtGui.QFileDialog.getSaveFileName()
         ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox_2.currentText()), con=ora_conn)  
-        df_ora.to_csv('datos.csv',index_label=False,index=False)
+        df_ora.to_csv(name,index_label=False,index=False)
 
     def exportCSV4(self):
         "exportar datos de la tabla a un csv"
+        name = QtGui.QFileDialog.getSaveFileName()
         ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox_3.currentText()), con=ora_conn)  
-        df_ora.to_csv('datos.csv',index_label=False,index=False)
+        df_ora.to_csv(name,index_label=False,index=False)
 
     def exportCSV5(self):
         "exportar datos de la tabla a un csv"
+        name = QtGui.QFileDialog.getSaveFileName()
         ora_conn =sqlite3.connect(self.rutaBD)
         df_ora = pd.read_sql('select * from '+str(self.comboBox_4.currentText()), con=ora_conn)  
-        df_ora.to_csv('datos.csv',index_label=False,index=False)
+        df_ora.to_csv(name,index_label=False,index=False)
 
     def filtrarConvencionales(self):
         conn = sqlite3.connect(self.rutaBD)
         cursor = conn.cursor()
-        date1=str(self.busqueda11.text())
-        date2=str(self.busqueda1.text())
-        #result = tuple(date1.split('/'))
-        #date = dt.date(year=result[0], month=result[1], day=int(result[2])+10)
-        #date2 = date.strftime("%Y/%m/%d")
-        cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha = '+date1)# BETWEEN '+date1+" AND "+date2)  
+        date1="'"+str(self.busqueda11.text())+"'"
+        date2="'"+str(self.busqueda1.text())+"'"
+        #cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+        cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha BETWEEN '+date1+" AND "+date2)  
         print cursor.fetchall()
         self.tabla1.clear()
         self.tabla1.setRowCount(0);
@@ -1647,8 +1771,11 @@ class Ui_MainWindow(object):
         self.comboBox.addItems(filter(lambda k: '_Niveles_Automaticos' in k, lista))  
         self.comboBox_2.addItems(filter(lambda k: '_Aforos' in k, lista)) 
         self.comboBox_3.addItems(filter(lambda k: '_Alertas' in k, lista)) 
+        self.comboBox_4.addItems(filter(lambda k: '_Caudales' in k, lista))
+        self.Actualizar_Maestro()
 
-
+    def borrarTabla(self):
+        pass
 
 if __name__ == "__main__":
     import sys
