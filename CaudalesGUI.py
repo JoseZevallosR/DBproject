@@ -499,7 +499,7 @@ class Ui_MainWindow(object):
 
         self.actualizar2 = QtGui.QPushButton(self.frame_20)
         self.actualizar2.setObjectName(_fromUtf8("actualizar2"))
-        self.actualizar2.clicked.connect(self.Actualizar_Auto)
+        self.actualizar2.clicked.connect(self.filtrarAutomaticas)
         self.gridLayout_26.addWidget(self.actualizar2, 0, 0, 1, 1)
 
         self.guardar2 = QtGui.QPushButton(self.frame_20)
@@ -556,7 +556,7 @@ class Ui_MainWindow(object):
 
         self.actualizar3 = QtGui.QPushButton(self.frame_8)
         self.actualizar3.setObjectName(_fromUtf8("actualizar3"))
-        self.actualizar3.clicked.connect(self.Actualizar_Aforo)
+        self.actualizar3.clicked.connect(self.filtrarAforos)
         self.gridLayout_7.addWidget(self.actualizar3, 1, 0, 1, 1)
 
         self.guardar3 = QtGui.QPushButton(self.frame_8)
@@ -722,7 +722,7 @@ class Ui_MainWindow(object):
 
         self.actualizar4 = QtGui.QPushButton(self.frame_10)
         self.actualizar4.setObjectName(_fromUtf8("actualizar4"))
-        self.actualizar4.clicked.connect(self.Actualizar_Alerta)
+        self.actualizar4.clicked.connect(self.filtrarAlertas)
         self.gridLayout_14.addWidget(self.actualizar4, 1, 2, 1, 1)
 
         self.guardar4 = QtGui.QPushButton(self.frame_10)
@@ -794,6 +794,7 @@ class Ui_MainWindow(object):
 
         self.Filtrar5 = QtGui.QPushButton(self.frame_13)
         self.Filtrar5.setObjectName(_fromUtf8("Filtrar5"))
+        self.Filtrar5.clicked.connect(self.filtrarCaudales)
         self.gridLayout_6.addWidget(self.Filtrar5, 1, 4, 1, 1)
 
         self.guardar5 = QtGui.QPushButton(self.frame_13)
@@ -1719,18 +1720,75 @@ class Ui_MainWindow(object):
         cursor = conn.cursor()
         date1="'"+str(self.busqueda11.text())+"'"
         date2="'"+str(self.busqueda1.text())+"'"
-        #cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
-        cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha BETWEEN '+date1+" AND "+date2)  
-        print cursor.fetchall()
+        cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' WHERE fecha >=  '+date1+" AND fecha<="+date2)  
         self.tabla1.clear()
         self.tabla1.setRowCount(0);
-        self.tabla1.setColumnCount(25)
-        self.tabla1.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)])
+        self.tabla1.setColumnCount(26)
+        self.tabla1.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
         for row,form in enumerate(cursor):
             self.tabla1.insertRow(row)
             for column,item in enumerate(form):
-                print item
-                self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))        
+                self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
+
+    def filtrarAutomaticas(self):
+        conn = sqlite3.connect(self.rutaBD)
+        cursor = conn.cursor()
+        date1="'"+str(self.busqueda2.text())+"'"
+        date2="'"+str(self.busqueda22.text())+"'"
+        cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText())+' WHERE fecha >=  '+date1+" AND fecha<="+date2)  
+        self.tabal2.clear()
+        self.tabal2.setRowCount(0);
+        self.tabal2.setColumnCount(26)
+        self.tabal2.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
+        for row,form in enumerate(cursor):
+            self.tabal2.insertRow(row)
+            for column,item in enumerate(form):
+                self.tabal2.setItem(row,column,QtGui.QTableWidgetItem(str(item))) 
+
+    def filtrarCaudales(self):
+        conn = sqlite3.connect(self.rutaBD)
+        cursor = conn.cursor()
+        date1="'"+str(self.busqueda5.text())+"'"
+        date2="'"+str(self.busqueda55.text())+"'"
+        cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' WHERE fecha >=  '+date1+" AND fecha<="+date2)  
+        self.tabla6.clear()
+        self.tabla6.setRowCount(0);
+        self.tabla6.setColumnCount(26)
+        self.tabla6.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
+        for row,form in enumerate(cursor):
+            self.tabla6.insertRow(row)
+            for column,item in enumerate(form):
+                self.tabla6.setItem(row,column,QtGui.QTableWidgetItem(str(item))) 
+
+    def filtrarAforos(self):
+        conn = sqlite3.connect(self.rutaBD)
+        cursor = conn.cursor()
+        date1="'"+str(self.busqueda3.text())+"'"
+        date2="'"+str(self.busqueda33.text())+"'"
+        cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText())+' WHERE fecha >=  '+date1+" AND fecha<="+date2)  
+        self.tabla3.clear()
+        self.tabla3.setRowCount(0);
+        self.tabla3.setColumnCount(12)
+        self.tabla3.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,11)]+['codigo'])
+        for row,form in enumerate(cursor):
+            self.tabla3.insertRow(row)
+            for column,item in enumerate(form):
+                self.tabla3.setItem(row,column,QtGui.QTableWidgetItem(str(item))) 
+
+    def filtrarAlertas(self):
+        conn = sqlite3.connect(self.rutaBD)
+        cursor = conn.cursor()
+        date1="'"+str(self.busqueda4.text())+"'"
+        date2="'"+str(self.busqueda44.text())+"'"
+        cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText())+' WHERE fecha >=  '+date1+" AND fecha<="+date2)  
+        self.tabla4.clear()
+        self.tabla4.setRowCount(0);
+        self.tabla4.setColumnCount(5)
+        self.tabla4.setHorizontalHeaderLabels(['fecha']+['A'+str(x) for x in range(1,4)]+['codigo'])
+        for row,form in enumerate(cursor):
+            self.tabla4.insertRow(row)
+            for column,item in enumerate(form):
+                self.tabla4.setItem(row,column,QtGui.QTableWidgetItem(str(item))) 
 
     def tablaMaestro(self):
         conn=sqlite3.connect(self.rutaBD)
