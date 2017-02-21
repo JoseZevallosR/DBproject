@@ -1064,7 +1064,7 @@ class Ui_MainWindow(object):
         self.tabla1.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.menuEstaciones.currentText())).fetchall()[0][0]
-        if numRows<=364:
+        if numRows<=60:
             cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText()))    
             for row,form in enumerate(cursor):
                 self.tabla1.insertRow(row)
@@ -1072,7 +1072,7 @@ class Ui_MainWindow(object):
                     self.tabla1.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
-            cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+            cursor.execute('SELECT * FROM ' +str(self.menuEstaciones.currentText())+' limit '+str(numRows-31)+','+str(numRows))    
             for row,form in enumerate(cursor):
                 self.tabla1.insertRow(row)
                 for column,item in enumerate(form):
@@ -1094,7 +1094,7 @@ class Ui_MainWindow(object):
         self.tabal2.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox.currentText())).fetchall()[0][0]
-        if numRows<=364:
+        if numRows<=60:
             cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText()))    
             for row,form in enumerate(cursor):
                 self.tabal2.insertRow(row)
@@ -1102,7 +1102,7 @@ class Ui_MainWindow(object):
                     self.tabal2.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
-            cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+            cursor.execute('SELECT * FROM ' +str(self.comboBox.currentText())+' limit '+str(numRows-31)+','+str(numRows))    
             for row,form in enumerate(cursor):
                 self.tabal2.insertRow(row)
                 for column,item in enumerate(form):
@@ -1124,7 +1124,7 @@ class Ui_MainWindow(object):
         self.tabla3.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,11)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_2.currentText())).fetchall()[0][0]
-        if numRows<=364:
+        if numRows<=60:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText()))    
             for row,form in enumerate(cursor):
                 self.tabla3.insertRow(row)
@@ -1132,7 +1132,7 @@ class Ui_MainWindow(object):
                     self.tabla3.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
-            cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText())+' limit '+str(numRows-366)+','+str(numRows))  #selecciona el ultimo año previo al valor observado al final  
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_2.currentText())+' limit '+str(numRows-31)+','+str(numRows))  #selecciona el ultimo año previo al valor observado al final  
             for row,form in enumerate(cursor):
                 self.tabla3.insertRow(row)
                 for column,item in enumerate(form):
@@ -1153,7 +1153,7 @@ class Ui_MainWindow(object):
         self.tabla4.setHorizontalHeaderLabels(['fecha']+['A'+str(x) for x in range(1,4)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_3.currentText())).fetchall()[0][0]
-        if numRows<=364:
+        if numRows<=60:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText()))    
             for row,form in enumerate(cursor):
                 self.tabla4.insertRow(row)
@@ -1161,7 +1161,7 @@ class Ui_MainWindow(object):
                     self.tabla4.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
-            cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_3.currentText())+' limit '+str(numRows-31)+','+str(numRows))    
             for row,form in enumerate(cursor):
                 self.tabla4.insertRow(row)
                 for column,item in enumerate(form):
@@ -1183,7 +1183,7 @@ class Ui_MainWindow(object):
         self.tabla6.setHorizontalHeaderLabels(['fecha']+['N'+str(x) for x in range(1,25)]+['codigo'])
 
         numRows = cursor.execute( "SELECT COUNT(*) FROM "+str(self.comboBox_4.currentText())).fetchall()[0][0]
-        if numRows<=364:
+        if numRows<=60:
             cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText()))    
             for row,form in enumerate(cursor):
                 self.tabla6.insertRow(row)
@@ -1191,7 +1191,7 @@ class Ui_MainWindow(object):
                     self.tabla6.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
-            cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' limit '+str(numRows-366)+','+str(numRows))    
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' limit '+str(numRows-31+','+str(numRows))    
             for row,form in enumerate(cursor):
                 self.tabla6.insertRow(row)
                 for column,item in enumerate(form):
@@ -1616,7 +1616,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.menuEstaciones.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Manual()
+            #self.Actualizar_Manual()
         except:
             print("")
 
@@ -1633,7 +1633,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.comboBox.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Auto()
+            #self.Actualizar_Auto()
         except:
             print("")
 
@@ -1650,7 +1650,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.comboBox_2.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Aforo()
+            #self.Actualizar_Aforo()
         except:
             print("")
 
@@ -1667,7 +1667,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.comboBox_3.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Alerta()
+            #self.Actualizar_Alerta()
         except:
             print("")
 
@@ -1684,7 +1684,7 @@ class Ui_MainWindow(object):
             cursor.execute("UPDATE "+str(self.comboBox_4.currentText()) +" SET "+columns[column]+'='+ value+' WHERE fecha=?',(ids,))
             conn.commit()
             cursor.close()
-            self.Actualizar_Caudal()# actualizar caudales
+            #self.Actualizar_Caudal()# actualizar caudales
         except:
             print("")
 
