@@ -1191,7 +1191,7 @@ class Ui_MainWindow(object):
                     self.tabla6.setItem(row,column,QtGui.QTableWidgetItem(str(item)))  
 
         else:
-            cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' limit '+str(numRows-31+','+str(numRows))    
+            cursor.execute('SELECT * FROM ' +str(self.comboBox_4.currentText())+' limit '+str(numRows-31+','+str(numRows)))
             for row,form in enumerate(cursor):
                 self.tabla6.insertRow(row)
                 for column,item in enumerate(form):
@@ -1460,14 +1460,16 @@ class Ui_MainWindow(object):
         rio=self.lineEdit_31.text()
         dpto=self.lineEdit_2.text()
         prov=self.lineEdit_3.text()
+        distro=''
         lon=self.lineEdit_4.text()
         lat=self.lineEdit_5.text()
         alt=self.lineEdit_6.text()
+        inicio=''
         ent=self.lineEdit_7.text()
         q=self.lineEdit_8.text()
 
 
-        registro=(codigo,nombre,dre,sishi,cuen,rio,dpto,prov,lon,lat,alt,ent,q)
+        registro=(codigo,nombre,dre,sishi,cuen,rio,dpto,prov,distro,lon,lat,alt,inicio,ent,q)
         cursor.execute("""INSERT INTO """+ "Maestro"+ """ (Codigo,Nombre,DRE,Sishidro,
               Cuenca,rio,DPTO,PROV,DISTRITO,LONG,LAT,ALT, Inicio,ENT,Q) 
              VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
@@ -1839,6 +1841,9 @@ class Ui_MainWindow(object):
         self.Actualizar_Maestro()
 
     def borrarTabla(self):
+        "para borrar la tabla del maestro"
+        tabla=self.codigoEstacion2.text()
+        self.Actualizar_Maestro()
         pass
 
 if __name__ == "__main__":
